@@ -173,6 +173,28 @@ Explore what files are created by Verilator in **_obj_dir/ _** and now open in V
 
 Make these modification, compile, and run.  Examine the waveform with GTKwave and explain what you see.
 
+### Response:
+1. Modifying the testbench file by changing the values for i at which the `rst` and `en` are changed. By observing the original waveforms on GTKwave, we can determine which values of `i` are required to achieve our desired effect.\
+  *It should be worth noting that `i` starts at 0, meaning that extra care must be taken when choosing values for `i`.*
+
+    ```cpp
+    for (clk = 0; clk < 2; clk++)
+        {
+            tfp->dump(2 * i + clk); // unit is in ps
+            top->clk = !top->clk;
+            top->eval();
+        }
+        top->rst = (i < 2);
+        top->en = (i > 4);
+        if (i == 14 || i == 15 || i == 16)
+        {
+            top->en = 0;
+        }
+    ```
+    ![stopCount3](images/stopCount3.png)
+
+2. It is shown how one can implement an asynchronous reset in the notes (Lecture 2):
+![AsynchronousReset](images/async_reset.png)
 ---
 
 ## Task 2: Linking Verilator simulation with Vbuddy
@@ -245,6 +267,9 @@ Instead of showing count values on 7-segment displays, you may also plot this on
 ```C++
     vbdPlot(int(top->count), 0, 255);
 ```
+
+### Comment
+*It should be worth noting that the program only stops when the cycle limit is hit, and then it will automatically exit and STOP operation.* 
 
 ## TEST YOURSELF CHALLENGE:
 

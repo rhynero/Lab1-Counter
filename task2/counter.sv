@@ -9,7 +9,7 @@ module counter #( //file name and module name must be the same
 
 );
 
-  always_ff @ (posedge clk) 
+  always_ff @(posedge clk) 
     if (rst) count <= {WIDTH{1'b0}};
     else count <= count + {{WIDTH - 1{1'b0}}, en}; //count increments
 
